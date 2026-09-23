@@ -1,0 +1,19 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import GeometricPattern from '@/components/GeometricPattern.astro';
+import BeltTests from '@/components/BeltTests.astro';
+import { site } from '@/data/site';
+---
+<BaseLayout title="Students | Task Karate School" description="Public student resources for Task Karate School in La Crosse, Wisconsin, including the dojo rules, handbook guidance, belt testing requirements, and the separate Student Portal.">
+  <section class="page-hero"><GeometricPattern class="geo-pattern--page" /><div class="shell page-hero-grid"><div><p class="eyebrow eyebrow--gold">Students</p><h1>The people<br /><em>are the point.</em></h1></div><p>Task is a family. This page keeps the public resources students and families reach for most in one place.</p></div></section>
+
+  <section class="section students-welcome"><div class="shell students-welcome-grid"><div><p class="eyebrow eyebrow--cyan">For current students & families</p><h2>Keep training.<br /><em>Keep asking questions.</em></h2></div><div><p class="large-copy">Use these resources for the parts of training that happen before and between classes. Private accounts, check-in, attendance, and student-specific information belong in the separate Student Portal.</p><a class="button button--blue" href={site.portalUrl} target="_blank" rel="noopener noreferrer">Open Student Portal <span aria-hidden="true">↗</span></a></div></div></section>
+
+  <section class="section students-rules"><div class="shell students-panel"><p class="eyebrow eyebrow--gold">Dojo code</p><h2>Rules of TASK Karate</h2><p class="students-panel-lede">Remember these at every class:</p><ol class="student-rules-list"><li><span>01</span>Don’t use it the wrong way!</li><li><span>02</span>Be respectful!</li><li><span>03</span>Do your best!</li></ol></div></section>
+
+  <BeltTests />
+
+  <section class="section students-handbook"><div class="shell students-panel"><p class="eyebrow eyebrow--cyan">Student handbook</p><h2>Good questions<br /><em>have good answers.</em></h2><p class="students-panel-lede">Start with the basics below. If a situation is specific to you, ask an instructor or call the school.</p><div class="student-faq"><details open><summary>What age are the classes?</summary><p>Kids class is typically ages 6–11, and the Teen/Adult class is 12+. Truly—you’re never too old to start.</p></details><details><summary>How often should I attend?</summary><p>Plan on at least 2–3 times per week for steady progress.</p></details><details><summary>Do kids use karate in the wrong way?</summary><p>We emphasize respect, self-control, and never abusing martial arts skills.</p></details><details><summary>How long does it take to achieve Black Belt?</summary><p>Minimum is about 3½ years, and often longer—consistent training is key.</p></details></div></div></section>
+
+  <section class="section students-community"><div class="shell students-community-grid"><div><p class="eyebrow eyebrow--purple">Keep the family strong</p><h2>Training is<br /><em>something we share.</em></h2></div><div><p class="large-copy">Look after your training partners, welcome new students, and help keep the dojo a place where people can do their best work. The small things students do for one another are a big part of what makes TASK feel like TASK.</p><a class="arrow-link arrow-link--light" href="/about/">Meet the people behind the school <span aria-hidden="true">→</span></a></div></div></section>
+</BaseLayout>

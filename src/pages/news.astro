@@ -1,0 +1,10 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import GeometricPattern from '@/components/GeometricPattern.astro';
+import { publicNotes } from '@/data/news';
+---
+<BaseLayout title="News & Notes | Task Karate School" description="Public announcements, schedule notes, and training information from Task Karate School in La Crosse, Wisconsin.">
+  <section class="page-hero"><GeometricPattern class="geo-pattern--page" /><div class="shell page-hero-grid"><div><p class="eyebrow eyebrow--cyan">News & notes</p><h1>Good to<br /><em>know.</em></h1></div><p>Public information for students, families, and people considering their first class.</p></div></section>
+  <section class="section section--light"><div class="shell notes-layout notes-layout--listing"><div class="notes-heading"><p class="eyebrow eyebrow--teal">From the school</p><h2>Useful things<br /><em>to keep handy.</em></h2><p>Short, public updates for students, families, and anyone deciding whether Task Karate might be the right place to train.</p></div><div class="notes-list">{publicNotes.map((note) => <article class="note-card"><p class="eyebrow eyebrow--purple">{note.date}</p><h3><a class="news-card-title" href={note.href}>{note.title}</a></h3><p>{note.copy}</p><a class="arrow-link" href={note.href}>Open the full story <span aria-hidden="true">→</span></a></article>)}</div></div></section>
+  <section class="section news-archive-section"><div class="shell news-archive-link"><div><p class="eyebrow eyebrow--gold">Historical archive</p><h2>Every newsletter,<br /><em>kept.</em></h2></div><div><p>Read the complete year-by-year archive of Task Karate newsletters, from the earliest issues through the latest public updates.</p><a class="button button--gold" href="/newsletters/">Browse the newsletter archive <span aria-hidden="true">↗</span></a></div></div></section>
+</BaseLayout>

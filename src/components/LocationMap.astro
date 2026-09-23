@@ -1,0 +1,41 @@
+---
+import { site } from '@/data/site';
+
+interface Props {
+  eyebrow?: string;
+  title?: string;
+  copy?: string;
+  compact?: boolean;
+}
+
+const {
+  eyebrow = 'Find the dojo',
+  title = 'Train in the heart of La Crosse.',
+  copy = 'Task Karate School is at 1501 Saint Andrew Street, La Crosse, Wisconsin 54603.',
+  compact = false
+} = Astro.props;
+---
+<section class:list={['location-map-section', { 'location-map-section--compact': compact }]}>
+  <div class="shell location-map-grid">
+    <div class="location-map-copy">
+      <p class="eyebrow eyebrow--gold">{eyebrow}</p>
+      <h2 set:html={title}></h2>
+      <p class="large-copy">{copy}</p>
+      <address>{site.address}</address>
+      <a class="arrow-link arrow-link--light" href={site.directionsUrl} target="_blank" rel="noopener noreferrer">Get directions <span aria-hidden="true">↗</span></a>
+    </div>
+    <div class="location-map-frame">
+      <a class="location-map-preview" href={site.mapUrl} target="_blank" rel="noopener noreferrer" aria-label="Open an interactive map showing Task Karate School in La Crosse">
+        <span class="location-map-tiles" aria-hidden="true">
+          <img src="https://tile.openstreetmap.org/15/8078/11935.png" width="256" height="256" loading="lazy" alt="" />
+          <img src="https://tile.openstreetmap.org/15/8079/11935.png" width="256" height="256" loading="lazy" alt="" />
+          <img src="https://tile.openstreetmap.org/15/8078/11936.png" width="256" height="256" loading="lazy" alt="" />
+          <img src="https://tile.openstreetmap.org/15/8079/11936.png" width="256" height="256" loading="lazy" alt="" />
+        </span>
+        <span class="location-map-pin"><i aria-hidden="true"></i><b>Task Karate</b></span>
+        <span class="location-map-open">Open interactive map <span aria-hidden="true">↗</span></span>
+      </a>
+      <small>Map data © OpenStreetMap contributors</small>
+    </div>
+  </div>
+</section>

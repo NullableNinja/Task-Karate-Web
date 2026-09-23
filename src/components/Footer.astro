@@ -1,0 +1,12 @@
+---
+import { site } from '@/data/site';
+---
+<footer class="site-footer">
+  <div class="geo-footer"><span></span><span></span></div>
+  <div class="shell footer-grid">
+    <div class="footer-intro"><p class="footer-kicker">TASK KARATE SCHOOL</p><p>A neighborhood martial arts school for kids, teens, adults, and curious beginners in La Crosse, Wisconsin.</p></div>
+    <div class="footer-contact"><p class="footer-label">Find the dojo</p><address>{site.address}</address><a href={`tel:${site.phoneHref}`}>{site.phoneDisplay}</a><span>{site.email}</span></div>
+    <div class="footer-links"><p class="footer-label">Explore</p><a href="/programs/">Programs</a><a href="/schedule/">Schedule</a><a href="/about/">About</a><a href="/news/">News</a><a href="/newsletters/">Newsletters</a><a href="/contact/">Start training</a><a href={site.facebook} target="_blank" rel="noopener noreferrer">Facebook ↗</a><a href={site.portalUrl} target="_blank" rel="noopener noreferrer">Student Portal ↗</a></div>
+  </div>
+  <div class="shell footer-bottom"><span>© {new Date().getFullYear()} Task Karate School</span><span>La Crosse · Wisconsin</span></div>
+</footer>

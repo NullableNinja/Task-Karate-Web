@@ -1,0 +1,28 @@
+---
+import { navigation, site } from '@/data/site';
+const { currentPath = '/' } = Astro.props;
+---
+<header class="site-header">
+  <div class="shell header-inner">
+    <a class="brand" href="/" aria-label={`${site.name} home`}>
+      <img src="/images/task-logo.png" width="92" height="58" alt="" />
+      <span><strong>Task Karate</strong><small>School · La Crosse</small></span>
+    </a>
+    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Open navigation"><span class="sr-only">Open navigation</span><i></i><i></i></button>
+    <nav class="site-nav" id="site-nav" aria-label="Main navigation">
+      <a class:list={{ 'is-current': currentPath === '/' }} aria-current={currentPath === '/' ? 'page' : undefined} href="/">Home</a>
+      {navigation.map((item) => <a class:list={{ 'is-current': currentPath.startsWith(item.href) }} aria-current={currentPath.startsWith(item.href) ? 'page' : undefined} href={item.href} data-contact-open={item.label === 'Contact' ? true : undefined}>{item.label}</a>)}
+      <a class="nav-portal" href={site.portalUrl} target="_blank" rel="noopener noreferrer" aria-label="Open the separate Task Karate Student Portal in a new tab"><span>Student Portal</span> <span aria-hidden="true">↗</span></a>
+    </nav>
+  </div>
+</header>
+<script is:inline>
+  const toggle = /** @type {HTMLButtonElement | null} */ (document.querySelector('.menu-toggle'));
+  const nav = /** @type {HTMLElement | null} */ (document.querySelector('#site-nav'));
+  /** @param {boolean} open @param {boolean} [restoreFocus] */
+  const setNavState = (open, restoreFocus = false) => { toggle?.setAttribute('aria-expanded', String(open)); toggle?.setAttribute('aria-label', open ? 'Close navigation' : 'Open navigation'); toggle?.querySelector('.sr-only')?.replaceChildren(document.createTextNode(open ? 'Close navigation' : 'Open navigation')); nav?.toggleAttribute('data-open', open); document.body.classList.toggle('nav-open', open); if (!open && restoreFocus) toggle?.focus(); };
+  const closeNav = (restoreFocus = false) => setNavState(false, restoreFocus);
+  toggle?.addEventListener('click', () => setNavState(toggle.getAttribute('aria-expanded') !== 'true'));
+  nav?.querySelectorAll('a').forEach((link) => link.addEventListener('click', () => closeNav()));
+  document.addEventListener('keydown', (event) => { if (event.key === 'Escape' && toggle?.getAttribute('aria-expanded') === 'true') closeNav(true); });
+</script>

@@ -1,0 +1,18 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import GeometricPattern from '@/components/GeometricPattern.astro';
+import { publicNotes } from '@/data/news';
+
+export function getStaticPaths() {
+  return publicNotes.map((note) => ({
+    params: { slug: note.slug },
+    props: { note }
+  }));
+}
+
+const { note } = Astro.props;
+---
+<BaseLayout title={note.title + ' | Task Karate School'} description={note.copy}>
+  <section class="page-hero"><GeometricPattern class="geo-pattern--page" /><div class="shell page-hero-grid"><nav class="breadcrumb" aria-label="Breadcrumb"><a href="/news/">News & notes</a><span aria-hidden="true">/</span><span>{note.date}</span></nav><div><p class="eyebrow eyebrow--cyan">{note.date}</p><h1>Good to<br /><em>know.</em></h1></div><p>{note.copy}</p></div></section>
+  <section class="section news-story-section"><div class="shell news-story"><p class="eyebrow eyebrow--gold">Task Karate news & notes</p><h2>{note.title}</h2><div class="news-story-body">{note.body.map((paragraph) => <p class="large-copy">{paragraph}</p>)}</div><div class="news-story-actions"><a class="button button--blue" href="/news/">Back to news <span aria-hidden="true">←</span></a>{note.slug === 'public-schedule' && <a class="arrow-link arrow-link--light" href="/schedule/">Open the schedule <span aria-hidden="true">→</span></a>}{note.slug === 'before-your-first-visit' && <a class="arrow-link arrow-link--light" href="/contact/">Contact the school <span aria-hidden="true">→</span></a>}</div></div></section>
+</BaseLayout>

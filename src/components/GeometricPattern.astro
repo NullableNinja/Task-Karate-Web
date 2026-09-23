@@ -1,0 +1,5 @@
+---
+interface Props { class?: string; }
+const { class: className = '' } = Astro.props;
+---
+<div class:list={['geo-pattern', className]} aria-hidden="true"><span></span><span></span><span></span></div>

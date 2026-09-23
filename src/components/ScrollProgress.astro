@@ -1,0 +1,19 @@
+<div class="scroll-progress" id="scroll-progress" role="progressbar" aria-label="Scroll progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+  <span aria-hidden="true"></span>
+</div>
+<script is:inline>
+  const progress = document.querySelector('#scroll-progress');
+  const progressFill = progress?.querySelector('span');
+  const beltStages = ['white', 'gold', 'orange', 'green', 'purple', 'blue', 'red', 'brown', 'black'];
+  const syncProgress = () => {
+    const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+    const ratio = scrollable > 0 ? Math.min(1, Math.max(0, window.scrollY / scrollable)) : 0;
+    const stage = beltStages[Math.min(beltStages.length - 1, Math.floor(ratio * beltStages.length))];
+    progress?.setAttribute('aria-valuenow', String(Math.round(ratio * 100)));
+    progress?.setAttribute('data-belt-stage', stage);
+    if (progressFill) progressFill.style.transform = `scaleX(${ratio})`;
+  };
+  window.addEventListener('scroll', syncProgress, { passive: true });
+  window.addEventListener('resize', syncProgress);
+  syncProgress();
+</script>

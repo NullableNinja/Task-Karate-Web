@@ -1,0 +1,5 @@
+---
+interface Props { eyebrow?: string; title: string; copy: string; href: string; label: string; }
+const { eyebrow = 'Start here', title, copy, href, label } = Astro.props;
+---
+<section class="cta-section"><div class="shell cta-inner"><div><p class="eyebrow">{eyebrow}</p><h2>{title}</h2></div><div><p>{copy}</p><a class="button button--cyan" href={href} data-contact-open={href === '/contact/' ? true : undefined}>{label}<span aria-hidden="true">↗</span></a></div></div></section>

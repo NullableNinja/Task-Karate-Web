@@ -1,0 +1,70 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import GeometricPattern from '@/components/GeometricPattern.astro';
+import { scheduleClasses, scheduleDays } from '@/data/schedule';
+import { site } from '@/data/site';
+
+const scheduleSections = [
+  { id: 'kids', title: 'Kids', eyebrow: 'Core Karate • Kids', description: 'The published kids schedule, organized by belt group. Weapons and mat class appear here when they serve current kids students.', classes: scheduleClasses.filter((item) => item.title === 'Kids Karate' || (item.audience === 'Current kids students' && item.title !== 'Sparring')), tone: 'cyan', note: '* denotes a 1-hour class. All other kids sessions are 45 minutes.' },
+  { id: 'teens-adults', title: 'Teens & Adults', eyebrow: 'Core Karate • Teens & Adults', description: 'American-style karate for teens and adults, organized by belt group. Weapons, mat class, and testing appear here when they serve this student body.', classes: scheduleClasses.filter((item) => item.title === 'Teens & Adults' || (item.title === 'Mat Class' && item.audience.includes('Teens/adults')) || (item.title === 'Weapons' && item.audience.includes('teens and adults')) || item.title === 'Testing'), tone: 'gold', note: 'All teen and adult classes are 1 hour except Saturday morning sessions, which are 45 minutes.' },
+  { id: 'eskrima', title: 'IS3 · Eskrima', eyebrow: 'IS3 • Eskrima', description: 'The current Eskrima sessions for adults.', classes: scheduleClasses.filter((item) => item.rankLabel === 'Adult Eskrima'), tone: 'purple', note: 'Ask the instructor about the fit for your training goals.' },
+  { id: 'sparring', title: 'Sparring', eyebrow: 'Current students • Sparring', description: 'Dedicated sparring times for current students. Equipment, experience, and safety expectations apply.', classes: scheduleClasses.filter((item) => item.title === 'Sparring'), tone: 'red', note: 'Gear is required to participate. Ask your instructor about the right starting point.' }
+].map((section) => ({ ...section, ranks: [...new Set(section.classes.map((item) => item.rankLabel))].map((rank) => ({ rank, classes: section.classes.filter((item) => item.rankLabel === rank) })) }));
+
+const dotsFor = (rank: string) => {
+  const label = rank.toLowerCase();
+  if (label.includes('white')) return ['white', ...(label.includes('gold') ? ['gold'] : [])];
+  if (label.includes('orange')) return ['orange'];
+  if (label.includes('green')) return ['green', ...(label.includes('purple') ? ['purple'] : [])];
+  if (label.includes('blue')) return ['blue', ...(label.includes('red') ? ['red'] : [])];
+  if (label.includes('brown')) return ['brown'];
+  if (label.includes('black')) return ['black'];
+  if (label.includes('testing')) return ['gold'];
+  if (label.includes('sparring')) return ['red'];
+  if (label.includes('weapon')) return ['orange'];
+  if (label.includes('mat')) return ['purple'];
+  return ['blue'];
+};
+---
+<BaseLayout title="Class Schedule | Task Karate School" description="View the public class schedule for Task Karate School in La Crosse, Wisconsin, including programs, belt groups, class times, and eligibility details.">
+  <section class="page-hero"><GeometricPattern class="geo-pattern--page" /><div class="shell page-hero-grid"><div><p class="eyebrow eyebrow--cyan">Public schedule</p><h1>Find the class<br /><em>that fits.</em></h1></div><p>Choose a program first. Then scan across the week for a time that works. Tap a time for the class details. Weapons, mat class, and testing stay with the student body they serve.</p></div></section>
+  <section class="section schedule-page"><div class="shell"><div class="schedule-intro"><div><p class="eyebrow eyebrow--cyan">Plan your week</p><h2>Program first.<br /><em>Time second.</em></h2></div><p>This is the public informational schedule, organized by student body and belt group. Eligibility and times can change, so confirm before a first visit.</p></div><div class="schedule-filters" aria-label="Filter public class schedule"><label for="program-filter">Program<select id="program-filter"><option value="all">All programs</option>{scheduleSections.map((section) => <option value={section.id}>{section.title}</option>)}</select></label><label for="belt-filter">Belt group<select id="belt-filter"><option value="all">All belt groups</option><option value="white-gold">White / Gold</option><option value="orange">Orange</option><option value="green-purple">Green / Purple</option><option value="blue-red">Blue / Red</option><option value="brown">Brown</option><option value="black">Black</option><option value="green-up">Green belt & up</option><option value="special">Student sessions</option></select></label><label for="day-filter">Day<select id="day-filter"><option value="all">All days</option>{scheduleDays.map((day) => <option value={day}>{day}</option>)}</select></label><button class="button button--outline filter-reset" id="reset-filters" type="button">Reset filters</button><p class="filter-result" id="filter-result" aria-live="polite"></p></div>
+    <div class="program-schedules" aria-label="Public schedules by program">
+      {scheduleSections.map((section) => <section class:list={['program-schedule', 'v3-stack', `program-schedule--${section.tone}`]} data-program-section={section.id}>
+        <div class="v3-frame-back" aria-hidden="true"></div><div class="v3-panel schedule-panel">
+          <header class="program-schedule-head"><div><p class="eyebrow">{section.eyebrow}</p><h2>{section.title}</h2></div><p>{section.description}</p></header>
+          <div class="schedule-table-wrap"><table class="schedule-table"><caption class="sr-only">{section.title} public class schedule by belt group and day</caption><thead><tr><th scope="col" class="col-belts">Belts</th><th scope="col">Group</th>{scheduleDays.map((day) => <th scope="col" data-day-head={day}>{day.slice(0, 3)}</th>)}</tr></thead><tbody>
+            {section.ranks.map((rankGroup) => <tr class="schedule-table-row"> <td class="belt-cell" data-label="Belts"><span class="belt-dots" aria-hidden="true">{dotsFor(rankGroup.rank).map((dot) => <i class={`belt-dot belt-dot--${dot}`}></i>)}</span><span class="sr-only">{rankGroup.rank}</span></td><th scope="row" class="group-cell" data-label="Group">{rankGroup.rank}</th>{scheduleDays.map((day) => <td class="day-cell" data-day-cell={day} data-label={day}>{rankGroup.classes.filter((item) => item.day === day).map((item) => <button class:list={['schedule-time-pill', `schedule-time-pill--${item.tone}`]} type="button" data-day={item.day} data-groups={item.rankGroups.join(',')} data-time={item.time} data-title={section.title} data-audience={item.audience} data-rank={item.rankLabel} data-duration={item.duration} data-detail={item.detail} aria-label={`${section.title}, ${item.day}, ${item.time}, ${item.rankLabel}`}><span>{item.time}</span>{item.duration === '1 hour' && <sup>*</sup>}</button>)}</td>)}</tr>)}
+          </tbody></table></div>
+          <p class="schedule-section-note">{section.note}</p>
+        </div>
+      </section>)}
+    </div><p class="schedule-empty" id="schedule-empty" hidden>No published classes match those filters. Try another program, belt group, or day.</p><p class="schedule-note"><strong>Schedule notes:</strong> This is the school’s public informational schedule. Times and eligibility can change, so call <a href={`tel:${site.phoneHref}`}>{site.phoneDisplay}</a> or <a href="/contact/#contact-form">send a message</a> to confirm current details.</p></div></section>
+  <section class="portal-callout"><div class="shell portal-callout-inner"><div><p class="eyebrow eyebrow--cyan">Already a student?</p><h2>Private student tools live over there.</h2><p>Student accounts, check-in, attendance, and private information belong in the separate Task Karate Portal.</p></div><a class="button button--cyan" href={site.portalUrl} target="_blank" rel="noopener noreferrer">Open Student Portal <span aria-hidden="true">↗</span></a></div></section>
+  <dialog class="class-dialog" id="class-dialog" aria-labelledby="class-dialog-title" aria-describedby="class-dialog-detail"><div class="class-dialog-inner"><button class="dialog-close" type="button" data-dialog-close aria-label="Close class details">×</button><p class="eyebrow eyebrow--cyan">Class details</p><h2 id="class-dialog-title">Class</h2><p class="class-dialog-time" id="class-dialog-time"></p><dl><div><dt>Who can attend</dt><dd id="class-dialog-audience"></dd></div><div><dt>Belt group</dt><dd id="class-dialog-rank"></dd></div><div><dt>Duration</dt><dd id="class-dialog-duration"></dd></div></dl><p id="class-dialog-detail"></p></div></dialog>
+</BaseLayout>
+<script is:inline>
+  const dialog = /** @type {HTMLDialogElement | null} */ (document.querySelector('#class-dialog'));
+  const programFilter = /** @type {HTMLSelectElement | null} */ (document.querySelector('#program-filter'));
+  const beltFilter = /** @type {HTMLSelectElement | null} */ (document.querySelector('#belt-filter'));
+  const dayFilter = /** @type {HTMLSelectElement | null} */ (document.querySelector('#day-filter'));
+  const resetFilters = /** @type {HTMLButtonElement | null} */ (document.querySelector('#reset-filters'));
+  const result = document.querySelector('#filter-result');
+  const empty = /** @type {HTMLElement | null} */ (document.querySelector('#schedule-empty'));
+  let lastPill = /** @type {HTMLButtonElement | null} */ (null);
+  /** @param {string} id @param {string | undefined} value */
+  const setText = (id, value) => { const element = document.querySelector(id); if (element) element.textContent = value || ''; };
+  const close = () => dialog?.close();
+  const updateFilters = () => {
+    const program = programFilter?.value || 'all'; const belt = beltFilter?.value || 'all'; const day = dayFilter?.value || 'all'; let visible = 0;
+    document.querySelectorAll('.program-schedule').forEach((element) => { const section = /** @type {HTMLElement} */ (element); section.hidden = program !== 'all' && section.dataset.programSection !== program; });
+    document.querySelectorAll('.schedule-time-pill').forEach((element) => { const pill = /** @type {HTMLButtonElement} */ (element); const parent = pill.closest('.program-schedule'); const show = (program === 'all' || parent?.getAttribute('data-program-section') === program) && (belt === 'all' || pill.dataset.groups?.split(',').includes(belt)) && (day === 'all' || pill.dataset.day === day); pill.hidden = !show; if (show) visible += 1; });
+    document.querySelectorAll('.day-cell').forEach((element) => { const cell = /** @type {HTMLElement} */ (element); const itemDay = cell.dataset.dayCell; const hasVisibleClass = Boolean(cell.querySelector('.schedule-time-pill:not([hidden])')); cell.classList.toggle('day-cell--filtered', day !== 'all' && itemDay !== day); cell.classList.toggle('day-cell--empty', !hasVisibleClass); });
+    document.querySelectorAll('.schedule-table-row').forEach((element) => { const row = /** @type {HTMLElement} */ (element); row.hidden = !row.querySelector('.schedule-time-pill:not([hidden])'); });
+    document.querySelectorAll('.program-schedule').forEach((element) => { const section = /** @type {HTMLElement} */ (element); if (!section.hidden) section.hidden = !section.querySelector('.schedule-time-pill:not([hidden])'); });
+    if (result) result.textContent = `${visible} ${visible === 1 ? 'class' : 'classes'} shown`; if (empty) empty.hidden = visible !== 0; if (resetFilters) resetFilters.hidden = program === 'all' && belt === 'all' && day === 'all';
+  };
+  const queryProgram = new URLSearchParams(window.location.search).get('program'); if (queryProgram && programFilter && [...programFilter.options].some((option) => option.value === queryProgram)) programFilter.value = queryProgram;
+  document.querySelectorAll('.schedule-time-pill').forEach((element) => { const pill = /** @type {HTMLButtonElement} */ (element); pill.addEventListener('click', () => { if (!dialog) return; lastPill = pill; setText('#class-dialog-title', pill.dataset.title); setText('#class-dialog-time', `${pill.dataset.day} · ${pill.dataset.time}`); setText('#class-dialog-audience', pill.dataset.audience); setText('#class-dialog-rank', pill.dataset.rank); setText('#class-dialog-duration', pill.dataset.duration); setText('#class-dialog-detail', pill.dataset.detail); dialog.showModal(); /** @type {HTMLButtonElement | null} */ (document.querySelector('[data-dialog-close]'))?.focus(); }); });
+  programFilter?.addEventListener('change', updateFilters); beltFilter?.addEventListener('change', updateFilters); dayFilter?.addEventListener('change', updateFilters); resetFilters?.addEventListener('click', () => { if (programFilter) programFilter.value = 'all'; if (beltFilter) beltFilter.value = 'all'; if (dayFilter) dayFilter.value = 'all'; updateFilters(); }); document.querySelector('[data-dialog-close]')?.addEventListener('click', close); dialog?.addEventListener('close', () => { lastPill?.focus(); lastPill = null; }); dialog?.addEventListener('click', (event) => { if (event.target === dialog) close(); }); document.addEventListener('keydown', (event) => { if (event.key === 'Escape') close(); }); updateFilters();
+</script>

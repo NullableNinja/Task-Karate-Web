@@ -1,0 +1,5 @@
+---
+interface Props { eyebrow: string; title: string; copy?: string; light?: boolean; }
+const { eyebrow, title, copy, light = false } = Astro.props;
+---
+<div class:list={['section-intro', { 'section-intro--light': light }]}><div><p class="eyebrow">{eyebrow}</p><h2 set:html={title}></h2></div>{copy && <p>{copy}</p>}</div>

@@ -1,0 +1,23 @@
+---
+import { site } from '@/data/site';
+import Header from '@/components/Header.astro';
+import Footer from '@/components/Footer.astro';
+import ContactModal from '@/components/ContactModal.astro';
+import BackToTop from '@/components/BackToTop.astro';
+import ScrollProgress from '@/components/ScrollProgress.astro';
+import '@/styles/global.css';
+
+interface Props { title: string; description: string; canonicalPath?: string; image?: string; }
+const { title, description, canonicalPath = Astro.url.pathname, image = '/images/dojo-class.jpg' } = Astro.props;
+const canonical = new URL(canonicalPath, Astro.site).href;
+const imageUrl = new URL(image, Astro.site).href;
+const jsonLd = { '@context': 'https://schema.org', '@type': ['SportsActivityLocation', 'LocalBusiness'], name: site.name, url: Astro.site, image: imageUrl, telephone: site.phoneHref, email: site.email, hasMap: site.mapUrl, geo: { '@type': 'GeoCoordinates', latitude: site.latitude, longitude: site.longitude }, address: { '@type': 'PostalAddress', streetAddress: '1501 Saint Andrew Street', addressLocality: 'La Crosse', addressRegion: 'WI', postalCode: '54603', addressCountry: 'US' }, areaServed: 'La Crosse, Wisconsin', sameAs: [site.facebook, site.youtube] };
+---
+<!doctype html><html lang="en"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width" /><meta name="theme-color" content="#071321" /><meta name="description" content={description} /><link rel="canonical" href={canonical} /><link rel="icon" type="image/png" href="/images/task-logo.png" /><link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" /><link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" /><meta property="og:type" content="website" /><meta property="og:site_name" content={site.name} /><meta property="og:title" content={title} /><meta property="og:description" content={description} /><meta property="og:url" content={canonical} /><meta property="og:image" content={imageUrl} /><meta name="twitter:card" content="summary_large_image" /><meta name="twitter:title" content={title} /><meta name="twitter:description" content={description} /><meta name="twitter:image" content={imageUrl} /><title>{title}</title><script type="application/ld+json" set:html={JSON.stringify(jsonLd)} /></head><body><a class="skip-link" href="#main-content">Skip to content</a><div class="bg-geo" aria-hidden="true"></div><Header currentPath={Astro.url.pathname} /><main id="main-content"><slot /></main><Footer /><ContactModal /><BackToTop /><ScrollProgress /><script is:inline>
+  const contactDialog = /** @type {HTMLDialogElement | null} */ (document.querySelector('#contact-dialog'));
+  const closeContact = () => contactDialog?.close();
+  document.querySelectorAll('[data-contact-open]').forEach((trigger) => trigger.addEventListener('click', (event) => { event.preventDefault(); contactDialog?.showModal(); }));
+  document.querySelector('[data-contact-close]')?.addEventListener('click', closeContact);
+  contactDialog?.addEventListener('click', (event) => { if (event.target === contactDialog) closeContact(); });
+  contactDialog?.querySelectorAll('a').forEach((link) => link.addEventListener('click', closeContact));
+</script></body></html>

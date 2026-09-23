@@ -1,0 +1,83 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import GeometricPattern from '@/components/GeometricPattern.astro';
+import { newsletters } from '@/data/newsletters';
+
+const years = [...new Set(newsletters.map((entry) => entry.year))].sort((a, b) => Number(b) - Number(a));
+const monthOrder = ['January', 'February', 'March', 'April', 'May', 'May #1', 'May #2', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+---
+<BaseLayout title="Newsletter Archive | Task Karate School" description="Browse the complete Task Karate School newsletter archive, with issues organized by year and month.">
+  <section class="page-hero">
+    <GeometricPattern class="geo-pattern--page" />
+    <div class="shell page-hero-grid">
+      <div>
+        <p class="eyebrow eyebrow--cyan">From the archives</p>
+        <h1>Every month.<br /><em>Still here.</em></h1>
+      </div>
+      <p>The complete Task Karate newsletter archive, kept year by year for students, families, and friends of the school.</p>
+    </div>
+  </section>
+
+  <section class="section newsletter-page">
+    <div class="shell newsletter-intro">
+      <div>
+        <p class="eyebrow eyebrow--gold">Task Karate newsletters</p>
+        <h2>A long-running record<br /><em>of the dojo.</em></h2>
+      </div>
+      <div>
+        <p>Browse the original newsletters below. Each issue opens as a PDF in a new tab so you can read, save, or print it without losing your place here.</p>
+        <p class="newsletter-count">{newsletters.length} archived issues</p>
+      </div>
+    </div>
+
+    <div class="shell newsletter-controls" aria-label="Newsletter archive controls">
+      <label for="newsletter-search">Search the archive<input id="newsletter-search" type="search" placeholder="Try a year or month" autocomplete="off" /></label>
+      <label for="newsletter-year-jump">Jump to year<select id="newsletter-year-jump"><option value="all">All years</option>{years.map((year) => <option value={year}>{year}</option>)}</select></label>
+      <p id="newsletter-result" aria-live="polite">{newsletters.length} archived issues</p>
+    </div>
+
+    <div class="shell newsletter-years">
+      {years.map((year) => (
+        <section class="newsletter-year" data-newsletter-year={year} aria-labelledby={`newsletter-year-${year}`}>
+          <div class="newsletter-year-heading">
+            <p class="eyebrow eyebrow--cyan">Archive year</p>
+            <h2 id={`newsletter-year-${year}`}>{year}</h2>
+          </div>
+          <div class="newsletter-month-grid">
+            {newsletters.filter((entry) => entry.year === year).sort((a, b) => monthOrder.indexOf(a.month) - monthOrder.indexOf(b.month)).map((entry) => (
+              <a class="newsletter-link" data-newsletter-month={entry.month} href={`/newsletters/${entry.file}`} target="_blank" rel="noopener noreferrer">
+                <span>{entry.month}</span>
+                <small>PDF <span aria-hidden="true">↗</span></small>
+              </a>
+            ))}
+          </div>
+        </section>
+      ))}
+    </div>
+  </section>
+</BaseLayout>
+
+<script is:inline>
+  const archiveSearch = /** @type {HTMLInputElement | null} */ (document.querySelector('#newsletter-search'));
+  const archiveYear = /** @type {HTMLSelectElement | null} */ (document.querySelector('#newsletter-year-jump'));
+  const archiveResult = /** @type {HTMLElement | null} */ (document.querySelector('#newsletter-result'));
+  const archiveYears = /** @type {HTMLElement[]} */ ([...document.querySelectorAll('[data-newsletter-year]')]);
+  const archiveLinks = /** @type {HTMLElement[]} */ ([...document.querySelectorAll('.newsletter-link')]);
+  const updateArchive = () => {
+    const query = archiveSearch?.value.trim().toLowerCase() || '';
+    const selectedYear = archiveYear?.value || 'all';
+    let visible = 0;
+    archiveLinks.forEach((link) => {
+      const year = link.closest('[data-newsletter-year]')?.getAttribute('data-newsletter-year') || '';
+      const month = link.getAttribute('data-newsletter-month')?.toLowerCase() || '';
+      const show = (selectedYear === 'all' || year === selectedYear) && (!query || `${year} ${month}`.includes(query));
+      link.hidden = !show;
+      if (show) visible += 1;
+    });
+    archiveYears.forEach((section) => { section.hidden = !section.querySelector('.newsletter-link:not([hidden])'); });
+    if (archiveResult) archiveResult.textContent = `${visible} ${visible === 1 ? 'archived issue' : 'archived issues'} shown`;
+  };
+  archiveSearch?.addEventListener('input', updateArchive);
+  archiveYear?.addEventListener('change', updateArchive);
+  updateArchive();
+</script>

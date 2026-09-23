@@ -1,0 +1,26 @@
+---
+import { site } from '@/data/site';
+const directionsUrl = 'https://www.google.com/maps/search/?api=1&query=1501+Saint+Andrew+Street+La+Crosse+WI+54603';
+---
+<dialog class="contact-dialog" id="contact-dialog" aria-labelledby="contact-dialog-title" aria-describedby="contact-dialog-description">
+  <div class="contact-dialog-inner">
+    <button class="dialog-close" type="button" data-contact-close aria-label="Close contact options">×</button>
+    <p class="eyebrow eyebrow--gold">Start here</p>
+    <h2 id="contact-dialog-title">Let’s find your<br /><em>place to begin.</em></h2>
+    <p class="contact-dialog-lede" id="contact-dialog-description">Tell Task Karate what you are looking for and they can point you toward the right program and first class.</p>
+    <div class="contact-dialog-actions">
+      <a class="button button--gold" href={`tel:${site.phoneHref}`}>Call {site.phoneDisplay} <span aria-hidden="true">↗</span></a>
+      <a class="button button--outline" href="/contact/#contact-form">Send a message <span aria-hidden="true">→</span></a>
+      <a class="contact-dialog-link" href={directionsUrl} target="_blank" rel="noopener noreferrer">Get directions <span aria-hidden="true">↗</span></a>
+      <a class="contact-dialog-link" href="/contact/">See contact details <span aria-hidden="true">→</span></a>
+    </div>
+  </div>
+</dialog>
+<script is:inline>
+  (() => {
+    const dialog = /** @type {HTMLDialogElement | null} */ (document.querySelector('#contact-dialog'));
+    let opener = /** @type {HTMLElement | null} */ (null);
+  document.querySelectorAll('[data-contact-open]').forEach((trigger) => trigger.addEventListener('click', () => { opener = /** @type {HTMLElement} */ (trigger); window.setTimeout(() => /** @type {HTMLElement | null} */ (document.querySelector('[data-contact-close]'))?.focus(), 0); }));
+    dialog?.addEventListener('close', () => { opener?.focus(); opener = null; });
+  })();
+</script>

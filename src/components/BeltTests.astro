@@ -1,0 +1,62 @@
+---
+const belts = [
+  { id: 'white', label: 'White Belt', file: 'White-Belt-Testing-Sheet.html' },
+  { id: 'gold', label: 'Gold Belt', file: 'Gold-Belt-Testing-Sheet.html' },
+  { id: 'orange', label: 'Orange Belt', file: 'Orange-Belt-Testing-Sheet.html' },
+  { id: 'green', label: 'Green Belt', file: 'Green-Belt-Testing-Sheet.html' },
+  { id: 'purple', label: 'Purple Belt', file: 'Purple-Belt-Testing-Sheet.html' },
+  { id: 'blue', label: 'Blue Belt', file: 'Blue-Belt-Testing-Sheet.html' },
+  { id: 'red', label: 'Red Belt', file: 'Red-Belt-Testing-Sheet.html' },
+  { id: 'brown', label: 'Brown Belt', file: 'Brown-Belt-Testing-Sheet.html' },
+  { id: 'black', label: 'Black Belt', file: 'Black-Belt-Testing-Sheet.html' }
+];
+---
+<section class="section belt-tests-section">
+  <div class="shell v3-stack">
+    <div class="v3-frame-back" aria-hidden="true"></div>
+    <div class="v3-panel belt-tests-panel">
+      <p class="eyebrow">Testing requirements</p>
+      <h2>Belts</h2>
+      <p class="belt-tests-lede">Click on your belt below to see the testing requirements—level up your skills and earn your next rank.</p>
+      <div class="belt-button-grid" aria-label="Belt testing requirements">
+        {belts.map((belt) => <button class:list={['belt-button', `belt-button--${belt.id}`]} type="button" data-belt={belt.id} data-file={`/belt-tests/${belt.file}`} data-label={belt.label}>{belt.label}</button>)}
+      </div>
+    </div>
+  </div>
+</section>
+<dialog class="belt-dialog" id="belt-dialog" aria-labelledby="belt-dialog-title">
+  <div class="belt-dialog-inner">
+    <header class="belt-dialog-header"><div><p class="eyebrow">Testing requirements</p><h2 id="belt-dialog-title">Belt</h2></div><button class="dialog-close" type="button" data-belt-close aria-label="Close testing requirements">×</button></header>
+    <div class="belt-dialog-body"><iframe id="belt-frame" title="Belt testing requirements" loading="lazy"></iframe></div>
+    <footer class="belt-dialog-footer"><button class="button button--outline" type="button" id="belt-print">Print</button><button class="button button--gold" type="button" id="belt-download">Download PDF</button><a class="button button--outline" id="belt-sheet-download" href="#" download>Download sheet</a><a class="belt-sheet-link" id="belt-open" href="#" target="_blank" rel="noopener noreferrer">Open full sheet <span aria-hidden="true">↗</span></a></footer>
+  </div>
+</dialog>
+<script is:inline>
+  const beltDialog = /** @type {HTMLDialogElement | null} */ (document.querySelector('#belt-dialog'));
+  const beltFrame = /** @type {HTMLIFrameElement | null} */ (document.querySelector('#belt-frame'));
+  const beltTitle = document.querySelector('#belt-dialog-title');
+  const beltOpen = /** @type {HTMLAnchorElement | null} */ (document.querySelector('#belt-open'));
+  const beltSheetDownload = /** @type {HTMLAnchorElement | null} */ (document.querySelector('#belt-sheet-download'));
+  let activeBelt = '';
+  /** @type {Promise<any> | undefined} */
+  let pdfLoader;
+  const pdfApi = () => /** @type {any} */ (window).html2pdf;
+  const closeBelt = () => beltDialog?.close();
+  const loadPdf = () => {
+    if (pdfApi()) return Promise.resolve(pdfApi());
+    if (pdfLoader) return pdfLoader;
+    pdfLoader = new Promise((resolve, reject) => { const script = document.createElement('script'); script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js'; script.onload = () => resolve(pdfApi()); script.onerror = reject; document.head.appendChild(script); });
+    return pdfLoader;
+  };
+  document.querySelectorAll('.belt-button').forEach((button) => button.addEventListener('click', () => {
+    const element = /** @type {HTMLButtonElement} */ (button); activeBelt = element.dataset.belt || ''; const file = element.dataset.file || ''; if (beltTitle) beltTitle.textContent = `${element.dataset.label || 'Belt'} Testing Requirements`; if (beltFrame) beltFrame.src = file; if (beltOpen) beltOpen.href = file; if (beltSheetDownload) { beltSheetDownload.href = file; beltSheetDownload.download = `${activeBelt}-belt-testing-sheet.html`; } beltDialog?.showModal();
+  }));
+  document.querySelector('[data-belt-close]')?.addEventListener('click', closeBelt);
+  beltDialog?.addEventListener('click', (event) => { if (event.target === beltDialog) closeBelt(); });
+  document.querySelector('#belt-print')?.addEventListener('click', () => beltFrame?.contentWindow?.print());
+  document.querySelector('#belt-download')?.addEventListener('click', async () => {
+    if (!beltFrame?.contentDocument?.body || !activeBelt) return;
+    try { const makePdf = await loadPdf(); makePdf().set({ margin: .4, filename: `${activeBelt}-belt-testing-sheet.pdf`, image: { type: 'jpeg', quality: .98 }, html2canvas: { scale: 2, useCORS: true }, jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' } }).from(beltFrame.contentDocument.body).save(); }
+    catch { beltSheetDownload?.click(); }
+  });
+</script>
