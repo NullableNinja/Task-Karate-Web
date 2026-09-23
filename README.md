@@ -1,6 +1,6 @@
 # Task Karate School — public website
 
-This is the greenfield public marketing site for Task Karate School. It is an Astro static build intended for GitHub Pages and the `taskkarateschool.com` custom domain.
+This is the greenfield public marketing site for Task Karate School. It is an Astro static build published at the repository's GitHub Pages URL. The existing `taskkarateschool.com` website and DNS are intentionally outside this repository's deployment.
 
 ## Local development
 
@@ -51,7 +51,7 @@ The public contact page uses FormSubmit so the static GitHub Pages build can del
 
 ## GitHub Pages deployment
 
-Build the project with `npm run build`, publish the contents of `dist/`, and configure the repository's Pages source to the deployment workflow or branch used by the organization. For the custom domain, set the Pages custom domain to `taskkarateschool.com` and keep the generated `sitemap-index.xml` and `robots.txt` at the site root. Add a `CNAME` file containing `taskkarateschool.com` if the chosen Pages workflow requires it.
+The workflow in `.github/workflows/deploy.yml` builds the Astro site and publishes `dist/` through GitHub Pages whenever `main` changes. The current preview URL is `https://nullableninja.github.io/Task-Karate-Web/`. This repository does not configure, claim, redirect, or modify `taskkarateschool.com`; a future domain migration would require an explicit decision by the school and separate DNS/hosting work.
 
 ## Audit notes and source decisions
 
@@ -71,5 +71,5 @@ The `/students/` page gathers the exact public rules wording, handbook-style FAQ
 
 1. Confirm the final public schedule and any program age/eligibility details.
 2. Replace `PUBLIC_PORTAL_URL` with the real separate portal URL.
-3. Confirm the canonical domain/redirect behavior and configure GitHub Pages DNS/HTTPS.
+3. Decide separately whether the school wants a future domain migration; do not change the existing domain or DNS as part of routine repository deployment.
 4. Run Lighthouse against the deployed site and replace/resize assets further if the final hosting pipeline changes image delivery.
