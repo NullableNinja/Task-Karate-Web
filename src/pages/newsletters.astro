@@ -2,6 +2,7 @@
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import GeometricPattern from '@/components/GeometricPattern.astro';
 import { newsletters } from '@/data/newsletters';
+import { withBase } from '@/lib/paths';
 
 const years = [...new Set(newsletters.map((entry) => entry.year))].sort((a, b) => Number(b) - Number(a));
 const monthOrder = ['January', 'February', 'March', 'April', 'May', 'May #1', 'May #2', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
@@ -45,7 +46,7 @@ const monthOrder = ['January', 'February', 'March', 'April', 'May', 'May #1', 'M
           </div>
           <div class="newsletter-month-grid">
             {newsletters.filter((entry) => entry.year === year).sort((a, b) => monthOrder.indexOf(a.month) - monthOrder.indexOf(b.month)).map((entry) => (
-              <a class="newsletter-link" data-newsletter-month={entry.month} href={`/newsletters/${entry.file}`} target="_blank" rel="noopener noreferrer">
+              <a class="newsletter-link" data-newsletter-month={entry.month} href={withBase(`/newsletters/${entry.file}`)} target="_blank" rel="noopener noreferrer">
                 <span>{entry.month}</span>
                 <small>PDF <span aria-hidden="true">↗</span></small>
               </a>

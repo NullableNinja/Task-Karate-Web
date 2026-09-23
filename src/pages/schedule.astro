@@ -3,6 +3,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 import GeometricPattern from '@/components/GeometricPattern.astro';
 import { scheduleClasses, scheduleDays } from '@/data/schedule';
 import { site } from '@/data/site';
+import { withBase } from '@/lib/paths';
 
 const scheduleSections = [
   { id: 'kids', title: 'Kids', eyebrow: 'Core Karate • Kids', description: 'The published kids schedule, organized by belt group. Weapons and mat class appear here when they serve current kids students.', classes: scheduleClasses.filter((item) => item.title === 'Kids Karate' || (item.audience === 'Current kids students' && item.title !== 'Sparring')), tone: 'cyan', note: '* denotes a 1-hour class. All other kids sessions are 45 minutes.' },
@@ -39,7 +40,7 @@ const dotsFor = (rank: string) => {
           <p class="schedule-section-note">{section.note}</p>
         </div>
       </section>)}
-    </div><p class="schedule-empty" id="schedule-empty" hidden>No published classes match those filters. Try another program, belt group, or day.</p><p class="schedule-note"><strong>Schedule notes:</strong> This is the school’s public informational schedule. Times and eligibility can change, so call <a href={`tel:${site.phoneHref}`}>{site.phoneDisplay}</a> or <a href="/contact/#contact-form">send a message</a> to confirm current details.</p></div></section>
+    </div><p class="schedule-empty" id="schedule-empty" hidden>No published classes match those filters. Try another program, belt group, or day.</p><p class="schedule-note"><strong>Schedule notes:</strong> This is the school’s public informational schedule. Times and eligibility can change, so call <a href={`tel:${site.phoneHref}`}>{site.phoneDisplay}</a> or <a href={withBase('/contact/#contact-form')}>send a message</a> to confirm current details.</p></div></section>
   <section class="portal-callout"><div class="shell portal-callout-inner"><div><p class="eyebrow eyebrow--cyan">Already a student?</p><h2>Private student tools live over there.</h2><p>Student accounts, check-in, attendance, and private information belong in the separate Task Karate Portal.</p></div><a class="button button--cyan" href={site.portalUrl} target="_blank" rel="noopener noreferrer">Open Student Portal <span aria-hidden="true">↗</span></a></div></section>
   <dialog class="class-dialog" id="class-dialog" aria-labelledby="class-dialog-title" aria-describedby="class-dialog-detail"><div class="class-dialog-inner"><button class="dialog-close" type="button" data-dialog-close aria-label="Close class details">×</button><p class="eyebrow eyebrow--cyan">Class details</p><h2 id="class-dialog-title">Class</h2><p class="class-dialog-time" id="class-dialog-time"></p><dl><div><dt>Who can attend</dt><dd id="class-dialog-audience"></dd></div><div><dt>Belt group</dt><dd id="class-dialog-rank"></dd></div><div><dt>Duration</dt><dd id="class-dialog-duration"></dd></div></dl><p id="class-dialog-detail"></p></div></dialog>
 </BaseLayout>

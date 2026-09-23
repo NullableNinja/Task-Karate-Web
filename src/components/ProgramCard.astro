@@ -1,8 +1,9 @@
 ---
 interface Props { program: { id: string; label: string; title: string; summary: string; image: string; alt: string; accent: string; }; }
+import { withBase } from '@/lib/paths';
 const { program } = Astro.props;
 ---
 <article class:list={['program-card', `program-card--${program.accent}`]} id={program.id}>
-  <div class="program-card-media"><a class="program-card-media-link" href={`/programs/${program.id}/`} aria-label={`Learn more about ${program.title}`}><img src={program.image} width="1536" height="1024" loading="lazy" decoding="async" alt={program.alt} /></a><span class="program-card-index" aria-hidden="true">{program.id === 'kids' ? '01' : program.id === 'teens-adults' ? '02' : program.id === 'eskrima' ? '03' : '04'}</span></div>
-  <div class="program-card-copy"><p class="eyebrow">{program.label}</p><h3><a class="program-card-title" href={`/programs/${program.id}/`}>{program.title}</a></h3><p>{program.summary}</p><div class="program-card-actions"><a class="arrow-link" href={`/programs/${program.id}/`}>Learn more <span aria-hidden="true">→</span></a><a class="arrow-link arrow-link--schedule" href={`/schedule/?program=${program.id}`}>Class times <span aria-hidden="true">↗</span></a></div></div>
+  <div class="program-card-media"><a class="program-card-media-link" href={withBase(`/programs/${program.id}/`)} aria-label={`Learn more about ${program.title}`}><img src={withBase(program.image)} width="1536" height="1024" loading="lazy" decoding="async" alt={program.alt} /></a><span class="program-card-index" aria-hidden="true">{program.id === 'kids' ? '01' : program.id === 'teens-adults' ? '02' : program.id === 'eskrima' ? '03' : '04'}</span></div>
+  <div class="program-card-copy"><p class="eyebrow">{program.label}</p><h3><a class="program-card-title" href={withBase(`/programs/${program.id}/`)}>{program.title}</a></h3><p>{program.summary}</p><div class="program-card-actions"><a class="arrow-link" href={withBase(`/programs/${program.id}/`)}>Learn more <span aria-hidden="true">→</span></a><a class="arrow-link arrow-link--schedule" href={withBase(`/schedule/?program=${program.id}`)}>Class times <span aria-hidden="true">↗</span></a></div></div>
 </article>

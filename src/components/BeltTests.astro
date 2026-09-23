@@ -10,6 +10,7 @@ const belts = [
   { id: 'brown', label: 'Brown Belt', file: 'Brown-Belt-Testing-Sheet.html' },
   { id: 'black', label: 'Black Belt', file: 'Black-Belt-Testing-Sheet.html' }
 ];
+import { withBase } from '@/lib/paths';
 ---
 <section class="section belt-tests-section">
   <div class="shell v3-stack">
@@ -19,7 +20,7 @@ const belts = [
       <h2>Belts</h2>
       <p class="belt-tests-lede">Click on your belt below to see the testing requirements—level up your skills and earn your next rank.</p>
       <div class="belt-button-grid" aria-label="Belt testing requirements">
-        {belts.map((belt) => <button class:list={['belt-button', `belt-button--${belt.id}`]} type="button" data-belt={belt.id} data-file={`/belt-tests/${belt.file}`} data-label={belt.label}>{belt.label}</button>)}
+        {belts.map((belt) => <button class:list={['belt-button', `belt-button--${belt.id}`]} type="button" data-belt={belt.id} data-file={withBase(`/belt-tests/${belt.file}`)} data-label={belt.label}>{belt.label}</button>)}
       </div>
     </div>
   </div>

@@ -1,4 +1,5 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
+import { withBase } from '@/lib/paths';
 ---
-<BaseLayout title="Page not found | Task Karate School" description="The requested Task Karate page was not found."><section class="error-page"><div class="shell"><p class="eyebrow eyebrow--cyan">404 / off the mat</p><h1>That page stepped<br /><em>off the mat.</em></h1><p>The page may have moved, but the school is still here.</p><a class="button button--cyan" href="/">Back to Task Karate <span aria-hidden="true">↗</span></a></div></section></BaseLayout>
+<BaseLayout title="Page not found | Task Karate School" description="The requested Task Karate page was not found."><section class="error-page"><div class="shell"><p class="eyebrow eyebrow--cyan">404 / off the mat</p><h1>That page stepped<br /><em>off the mat.</em></h1><p>The page may have moved, but the school is still here.</p><a class="button button--cyan" href={withBase('/')}>Back to Task Karate <span aria-hidden="true">↗</span></a></div></section></BaseLayout>

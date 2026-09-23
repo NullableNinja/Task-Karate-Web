@@ -4,9 +4,10 @@ import GeometricPattern from '@/components/GeometricPattern.astro';
 import SectionIntro from '@/components/SectionIntro.astro';
 import ProgramCard from '@/components/ProgramCard.astro';
 import { programs } from '@/data/programs';
+import { withBase } from '@/lib/paths';
 ---
 <BaseLayout title="Programs | Task Karate School" description="Explore Kids Karate, Teens and Adults, and IS3 Eskrima at Task Karate School in La Crosse, Wisconsin.">
   <section class="page-hero"><GeometricPattern class="geo-pattern--page" /><div class="shell page-hero-grid"><div><p class="eyebrow eyebrow--cyan">Programs</p><h1>Find your way<br /><em>into the dojo.</em></h1></div><p>There is more than one way to train here. Start with the program that fits your age, interests, and experience.</p></div></section>
   <section class="section section--light"><div class="shell"><SectionIntro eyebrow="Four ways to train" title="Different goals.<br /><em>Same good work.</em>" copy="Choose by age, experience, and interest. Each program page explains what training feels like and connects you to its current public schedule." /><div class="program-directory">{programs.map((program) => <ProgramCard program={program} />)}</div></div></section>
-  <section class="section specialty-section"><div class="shell specialty-grid"><div><p class="eyebrow eyebrow--gold">Part of the main schedule</p><h2>Weapons, mat class,<br /><em>and testing.</em></h2></div><div><p>These are listed alongside the programs they serve. They are not a separate “focused sessions” program: check the public schedule for the current day, time, and student requirements.</p><a class="arrow-link arrow-link--light" href="/schedule/">See the full schedule <span aria-hidden="true">→</span></a></div></div></section>
+  <section class="section specialty-section"><div class="shell specialty-grid"><div><p class="eyebrow eyebrow--gold">Part of the main schedule</p><h2>Weapons, mat class,<br /><em>and testing.</em></h2></div><div><p>These are listed alongside the programs they serve. They are not a separate “focused sessions” program: check the public schedule for the current day, time, and student requirements.</p><a class="arrow-link arrow-link--light" href={withBase('/schedule/')}>See the full schedule <span aria-hidden="true">→</span></a></div></div></section>
 </BaseLayout>

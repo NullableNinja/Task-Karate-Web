@@ -1,17 +1,19 @@
 ---
 import { navigation, site } from '@/data/site';
+import { withBase } from '@/lib/paths';
 const { currentPath = '/' } = Astro.props;
+const localPath = currentPath.replace(import.meta.env.BASE_URL.replace(/\/$/, ''), '') || '/';
 ---
 <header class="site-header">
   <div class="shell header-inner">
-    <a class="brand" href="/" aria-label={`${site.name} home`}>
-      <img src="/images/task-logo.png" width="92" height="58" alt="" />
+    <a class="brand" href={withBase('/')} aria-label={`${site.name} home`}>
+      <img src={withBase('/images/task-logo.png')} width="92" height="58" alt="" />
       <span><strong>Task Karate</strong><small>School · La Crosse</small></span>
     </a>
     <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Open navigation"><span class="sr-only">Open navigation</span><i></i><i></i></button>
     <nav class="site-nav" id="site-nav" aria-label="Main navigation">
-      <a class:list={{ 'is-current': currentPath === '/' }} aria-current={currentPath === '/' ? 'page' : undefined} href="/">Home</a>
-      {navigation.map((item) => <a class:list={{ 'is-current': currentPath.startsWith(item.href) }} aria-current={currentPath.startsWith(item.href) ? 'page' : undefined} href={item.href} data-contact-open={item.label === 'Contact' ? true : undefined}>{item.label}</a>)}
+      <a class:list={{ 'is-current': localPath === '/' }} aria-current={localPath === '/' ? 'page' : undefined} href={withBase('/')}>Home</a>
+      {navigation.map((item) => <a class:list={{ 'is-current': localPath.startsWith(item.href) }} aria-current={localPath.startsWith(item.href) ? 'page' : undefined} href={withBase(item.href)} data-contact-open={item.label === 'Contact' ? true : undefined}>{item.label}</a>)}
       <a class="nav-portal" href={site.portalUrl} target="_blank" rel="noopener noreferrer" aria-label="Open the separate Task Karate Student Portal in a new tab"><span>Student Portal</span> <span aria-hidden="true">↗</span></a>
     </nav>
   </div>
