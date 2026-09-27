@@ -18,7 +18,7 @@ export const site = {
   contactFormAction: 'https://formsubmit.co/taskkarate@gmail.com',
   contactFormNext: 'https://taskkarateschool.com/contact/?sent=1#contact-form',
   // Replace at deploy time if the portal uses another hostname.
-  portalUrl: import.meta.env.PUBLIC_PORTAL_URL || 'https://portal.taskkarateschool.com/'
+  portalUrl: import.meta.env.PUBLIC_PORTAL_URL || 'https://proceed-too-lambda-numerical.trycloudflare.com/'
 };
 
 export const navigation = [
